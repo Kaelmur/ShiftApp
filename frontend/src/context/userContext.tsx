@@ -1,0 +1,24 @@
+import { createContext } from "react";
+
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  profileImageUrl: string;
+  role: "ADMIN" | "SUPER_ADMIN";
+  token: string;
+}
+
+export interface UserContextType {
+  user: User | null;
+  loading: boolean;
+  updateUser: (userData: User) => void;
+  clearUser: () => void;
+}
+
+export const UserContext = createContext<UserContextType>({
+  user: null,
+  loading: true,
+  updateUser: () => {},
+  clearUser: () => {},
+});
