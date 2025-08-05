@@ -48,6 +48,9 @@ export const startShift = async (
         startedAt: now,
         user: { connect: { id: user.id } },
         company: { connect: { id: user.companyId } },
+        brigade: user.brigadeId
+          ? { connect: { id: user.brigadeId } }
+          : undefined,
       },
     });
 
