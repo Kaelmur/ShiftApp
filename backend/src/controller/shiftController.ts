@@ -29,9 +29,9 @@ export const startShift = async (
     });
 
     if (existingShift) {
-      return res
-        .status(400)
-        .json({ message: "Shift already started today. Try again tomorrow." });
+      return res.status(400).json({
+        message: "Смена уже начиналась сегодня. Попробуйте еще раз завтра.",
+      });
     }
 
     const activeShift = await prisma.shift.findFirst({
@@ -39,7 +39,7 @@ export const startShift = async (
     });
 
     if (activeShift) {
-      return res.status(400).json({ message: "Shift already active" });
+      return res.status(400).json({ message: "Смена уже начата." });
     }
 
     const shift = await prisma.shift.create({
@@ -78,19 +78,20 @@ export const endShift = async (
   }
 
   const now = new Date();
-  const fivePM = new Date(now);
-  fivePM.setHours(17, 0, 0, 0);
+  // const fivePM = new Date(now);
+  // fivePM.setHours(17, 0, 0, 0);
 
-  const effectiveEnd = now > fivePM ? fivePM : now;
+  // const effectiveEnd = now > fivePM ? fivePM : now;
 
-  const durationMs = effectiveEnd.getTime() - shift.startedAt.getTime();
+  // const durationMs = effectiveEnd.getTime() - shift.startedAt.getTime();
+  const durationMs = now.getTime() - shift.startedAt.getTime();
   const durationHours = durationMs / (1000 * 60 * 60);
 
   const updated = await prisma.shift.update({
     where: { id: shift.id },
     data: {
       status: "ended",
-      endedAt: effectiveEnd,
+      endedAt: now,
       durationHours: Math.round(durationHours * 100) / 100,
     },
   });

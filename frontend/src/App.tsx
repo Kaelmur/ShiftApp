@@ -7,16 +7,12 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Auth/Login";
 import Dashboard from "./pages/Admin/Dashboard";
-import ManageTasks from "./pages/Admin/ManageShifts";
-import CreateTask from "./pages/Admin/CreateTask";
 import ManageUsers from "./pages/Admin/ManageUsers";
 import PrivateRoute from "./routes/PrivateRoute";
 import UserProvider from "./context/UserProvider";
 import { useContext } from "react";
 import { UserContext } from "./context/userContext";
 import { Toaster } from "react-hot-toast";
-import ManagePlans from "./pages/Admin/ManagePlans";
-import CreatePlan from "./pages/Admin/CreatePlan";
 import { ThemeProvider } from "./components/theme-provider";
 import ManageUsersByBrigade from "./pages/Admin/ManageUsersByBrigade";
 import ManageShifts from "./pages/Admin/ManageShifts";
