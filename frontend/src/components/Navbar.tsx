@@ -73,7 +73,7 @@ function Navbar({
       </button>
 
       <h2 className="text-lg font-medium text-black dark:text-white">
-        Task Manager
+        Shift App
       </h2>
 
       <ModeToggle />

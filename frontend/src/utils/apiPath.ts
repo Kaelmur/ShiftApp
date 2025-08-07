@@ -11,7 +11,7 @@ export const API_PATHS = {
     GET_USER_BY_ID: (userId: string) => `/api/users/${userId}`, // Get user by ID
     GET_USER_BY_BRIGADE: (brigadeId: string) =>
       `/api/brigades/${brigadeId}/users`, // Get user by brigade
-    CREATE_USER: "/api/users", // Create a new user
+    CREATE_USER: "/api/users/create", // Create a new user
     UPDATE_USER: (userId: string) => `/api/users/${userId}`, // Update user details
     DELETE_USER: (userId: string) => `/api/users/${userId}`, // Delete a user
   },

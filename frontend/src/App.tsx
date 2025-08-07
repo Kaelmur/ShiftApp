@@ -18,6 +18,7 @@ import ManageUsersByBrigade from "./pages/Admin/ManageUsersByBrigade";
 import ManageShifts from "./pages/Admin/ManageShifts";
 import ManageShiftsByUsers from "./pages/Admin/ManageShiftsByUsers";
 import MapPage from "./pages/Admin/MapPage";
+import CreateUser from "./pages/Admin/CreateUser";
 
 function App() {
   return (
@@ -53,10 +54,12 @@ function App() {
                   element={<MapPage />}
                 />
                 <Route path="/admin/users" element={<ManageUsers />} />
+
+                <Route path="/admin/users/create" element={<CreateUser />} />
               </Route>
 
               {/* Default Route */}
-              <Route path="/" element={<Root />} />
+              <Route path="/admin/dashboard" element={<Root />} />
             </Routes>
           </Router>
         </div>

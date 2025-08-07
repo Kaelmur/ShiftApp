@@ -32,8 +32,6 @@ function ManageShifts() {
     try {
       const response = await axiosInstance.get(API_PATHS.SHIFTS.GET_ALL_SHIFTS);
 
-      console.log(response);
-
       setAllShifts(
         response.data?.shifts?.length > 0 ? response.data.shifts : []
       );

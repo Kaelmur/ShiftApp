@@ -42,9 +42,18 @@ function ManageShiftsByUsers() {
         API_PATHS.SHIFTS.GET_USERS_SHIFTS(userId!)
       );
 
-      setUserName(response.data.shifts[0].user.name);
+      const fetchedShifts = response.data?.shifts || [];
 
-      setShifts(response.data?.shifts?.length > 0 ? response.data.shifts : []);
+      if (fetchedShifts.length > 0) {
+        setUserName(fetchedShifts[0].user.name);
+      } else {
+        const userRes = await axiosInstance.get(
+          API_PATHS.USERS.GET_USER_BY_ID(userId!)
+        );
+        setUserName(userRes.data.name);
+      }
+
+      setShifts(fetchedShifts);
     } catch (error) {
       console.error("Error fetching user shifts:", error);
     } finally {
@@ -76,15 +85,21 @@ function ManageShiftsByUsers() {
             <Spinner />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            {shifts?.map((shift) => (
-              <ShiftCard
-                key={shift.id}
-                {...shift}
-                onClick={() => handleClick(shift.id)}
-              />
-            ))}
-          </div>
+          <>
+            {shifts.length === 0 ? (
+              <p className="mt-10 text-slate-500">Смены отсутствуют</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                {shifts.map((shift) => (
+                  <ShiftCard
+                    key={shift.id}
+                    {...shift}
+                    onClick={() => handleClick(shift.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </DashboardLayout>

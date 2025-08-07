@@ -1,11 +1,12 @@
 import { createContext } from "react";
 
 export interface User {
-  _id: string;
+  id: string;
   name: string;
   email: string;
-  profileImageUrl: string;
   role: "ADMIN" | "SUPER_ADMIN";
+  companyId: number;
+  brigadeId: number;
   token: string;
 }
 

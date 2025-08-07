@@ -87,7 +87,12 @@ function ShiftCard({
       <div>
         <p className="text-gray-500 text-sm dark:text-gray-400">Длительность</p>
         <p className="font-medium text-gray-800 dark:text-gray-200">
-          {durationHours ?? "?"} ч.
+          {durationHours !== undefined
+            ? DateTime.fromObject({ hour: 0 })
+                .plus({ hours: durationHours })
+                .toFormat("HH:mm")
+            : "—"}{" "}
+          ч.
         </p>
       </div>
 

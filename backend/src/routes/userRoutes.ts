@@ -4,6 +4,7 @@ import {
   createUser,
   deleteUser,
   fetchUsersByCompanyId,
+  getUserById,
   getUsers,
   updateUser,
 } from "../controller/userController";
@@ -13,6 +14,7 @@ const router = Router();
 
 router.post("/create", protect, adminOnly, createUser);
 router.get("/", protect, adminOnly, getUsers);
+router.get("/:id", protect, adminOnly, getUserById);
 router.get("/company/:id", protect, adminOnly, fetchUsersByCompanyId);
 router.patch("/:id", protect, adminOnly, updateUser);
 router.patch("/:id/assign-brigade", protect, adminOnly, assignUserToBrigade);

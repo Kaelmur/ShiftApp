@@ -6,9 +6,11 @@ import { LuFileSpreadsheet } from "react-icons/lu";
 import UserCard from "../../components/Cards/UserCard";
 import toast from "react-hot-toast";
 import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface User {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   role: "ADMIN" | "SUPER_ADMIN";
@@ -17,11 +19,14 @@ interface User {
   };
   createdAt: string;
   updatedAt: string;
+  onClick: () => void;
 }
 
 function ManageUsers() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const getAllUsers = async () => {
     setLoading(true);
@@ -61,13 +66,17 @@ function ManageUsers() {
 
   useEffect(() => {
     getAllUsers();
-
-    return () => {};
   }, []);
 
   return (
     <DashboardLayout activeMenu="Работники">
       <div className="mt-5 mb-10">
+        <Button
+          onClick={() => navigate("/admin/users/create")}
+          className="fixed bottom-6 right-6 z-50 bg-primary text-white dark:text-black px-5 py-5 rounded-full shadow-lg dark:shadow-sm shadow-gray-400 dark:shadow-gray-600 hover:bg-blue-700 dark:hover:bg-gray-400 transition cursor-pointer"
+        >
+          + Создать работника
+        </Button>
         <div className="flex md:flex-row md:items-center justify-between">
           <h2 className="text-xl md:text-xl font-medium">Работники</h2>
 
@@ -87,7 +96,7 @@ function ManageUsers() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             {allUsers?.map((user) => (
-              <UserCard key={user._id} userInfo={user} />
+              <UserCard key={user.id} userInfo={user} onClick={() => {}} />
             ))}
           </div>
         )}

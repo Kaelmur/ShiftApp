@@ -4,6 +4,7 @@ import authRoutes from "./src/routes/authRoutes";
 import userRoutes from "./src/routes/userRoutes";
 import brigadeRoutes from "./src/routes/brigadeRotes";
 import companyRoutes from "./src/routes/companyRoutes";
+import reportRoutes from "./src/routes/reportRoutes";
 import shiftRoutes from "./src/routes/shiftRoutes";
 import cors from "cors";
 
@@ -26,6 +27,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/brigades", brigadeRoutes);
 app.use("/api/companies", companyRoutes);
 app.use("/api/shifts", shiftRoutes);
+app.use("/api/reports", reportRoutes);
 
 // Start Server
 const config = {

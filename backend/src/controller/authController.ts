@@ -5,10 +5,14 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 // Generate JWT Token
-const generateToken = (userId: string, name: string) => {
-  return jwt.sign({ id: userId, name: name }, process.env.JWT_SECRET!, {
-    expiresIn: "7d",
-  });
+const generateToken = (userId: string, name: string, role: string) => {
+  return jwt.sign(
+    { id: userId, name: name, role: role },
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 // Login User
@@ -34,7 +38,11 @@ export const loginUser = async (
       brigadeId: user.brigadeId,
       companyId: user.companyId,
       createdAt: user.createdAt,
-      token: generateToken(user.id.toString(), user.name.toString()),
+      token: generateToken(
+        user.id.toString(),
+        user.name.toString(),
+        user.role.toString()
+      ),
     });
   } catch (err) {
     next(err);
