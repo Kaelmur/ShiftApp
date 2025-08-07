@@ -42,6 +42,10 @@ function ManageUsers() {
     }
   };
 
+  const handleClick = (userData: User) => {
+    navigate("/admin/users/create", { state: { userId: userData.id } });
+  };
+
   // donwload task report
   const handleDownloadReport = async () => {
     try {
@@ -96,7 +100,13 @@ function ManageUsers() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             {allUsers?.map((user) => (
-              <UserCard key={user.id} userInfo={user} onClick={() => {}} />
+              <UserCard
+                key={user.id}
+                userInfo={user}
+                onClick={() => {
+                  handleClick(user);
+                }}
+              />
             ))}
           </div>
         )}

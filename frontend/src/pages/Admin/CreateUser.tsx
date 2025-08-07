@@ -3,14 +3,12 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPath";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import moment from "moment";
 import { LuTrash2 } from "react-icons/lu";
-import { useContext, useEffect, useState } from "react";
-import SelectUsers from "../../components/Inputs/SelectUsers";
+import { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import DeleteAlert from "../../components/DeleteAlert";
-import { UserContext } from "@/context/userContext";
 import SelectDropdown from "@/components/Inputs/SelectDropdown";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 type UserData = {
   name: string;
@@ -24,7 +22,8 @@ type UserData = {
 function CreateUser() {
   const navigate = useNavigate();
 
-  const { user } = useContext(UserContext);
+  const location = useLocation();
+  const { userId } = location.state || {};
 
   const [userData, setUserData] = useState({
     name: "",
@@ -37,7 +36,9 @@ function CreateUser() {
 
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [openDeleteAlert, setOpenDeleteAlert] = useState<boolean>(false);
   const [brigades, setBrigades] = useState<{ id: number; name: string }[]>([]);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const fetchBrigades = async () => {
@@ -94,28 +95,23 @@ function CreateUser() {
     }
   };
 
-  // // Update User
-  // const updatePlan = async () => {
-  //   setLoading(true);
+  // Update User
+  const updateUser = async () => {
+    setLoading(true);
 
-  //   try {
-  //     await axiosInstance.put(API_PATHS.PLANS.UPDATE_PLAN(planId), {
-  //       ...planData,
-  //       startDate: planData.startDate
-  //         ? new Date(planData.startDate).toISOString()
-  //         : null,
-  //       endDate: planData.endDate
-  //         ? new Date(planData.endDate).toISOString()
-  //         : null,
-  //     });
+    try {
+      await axiosInstance.patch(API_PATHS.USERS.UPDATE_USER(userId), {
+        ...userData,
+        ...(userData.password ? { password: userData.password } : {}),
+      });
 
-  //     toast.success("План успешно обновлен");
-  //   } catch (error) {
-  //     console.error("Error updating task:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      toast.success("Пользователь успешно обновлен");
+    } catch (error) {
+      console.error("Error updating task:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     setError("");
@@ -129,7 +125,7 @@ function CreateUser() {
       setError("Неверный email.");
       return;
     }
-    if (!userData.password || userData.password.length < 6) {
+    if (!userId && (!userData.password || userData.password.length < 6)) {
       setError("Пароль должен быть не менее 6 символов.");
       return;
     }
@@ -138,66 +134,60 @@ function CreateUser() {
       return;
     }
 
-    // if (planId) {
-    //   updateUser();
-    //   navigate("/admin/users");
-    //   return;
-    // }
+    if (userId) {
+      updateUser();
+      navigate("/admin/users");
+      return;
+    }
 
     createUser();
     navigate("/admin/users");
   };
 
-  // get Plan by ID
-  // const getPlanDetailsByID = async () => {
-  //   try {
-  //     const response = await axiosInstance.get<PlanDetailsResponse>(
-  //       API_PATHS.PLANS.GET_PLAN_BY_ID(planId)
-  //     );
+  const getUserDetailsByID = async () => {
+    try {
+      const response = await axiosInstance.get(
+        API_PATHS.USERS.GET_USER_BY_ID(userId)
+      );
 
-  //     if (response.data) {
-  //       const planInfo = response.data;
+      if (response.data) {
+        const userInfo = response.data;
 
-  //       setPlanData({
-  //         name: planInfo.name,
-  //         goal: planInfo.goal,
-  //         startDate: planInfo.startDate
-  //           ? moment(planInfo.startDate).format("YYYY-MM-DD")
-  //           : null,
-  //         endDate: planInfo.endDate
-  //           ? moment(planInfo.endDate).format("YYYY-MM-DD")
-  //           : null,
-  //         assignedTo: planInfo?.assignedTo?.map((user) => user?._id) || [],
-  //         tasks: planInfo?.tasks || [],
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Ошибка при получении плана:", error);
-  //   }
-  // };
+        setUserData({
+          name: userInfo.name,
+          email: userInfo.email,
+          password: "",
+          role: userInfo.role || "WORKER",
+          companyId: userInfo.companyId || null,
+          brigadeId: userInfo.brigadeId || null,
+        });
+      }
+    } catch (error) {
+      console.error("Ошибка при получении пользователя:", error);
+    }
+  };
 
-  // Delete Task
-  // const deletePlan = async () => {
-  //   try {
-  //     await axiosInstance.delete(API_PATHS.PLANS.DELETE_PLAN(planId));
+  const deleteUser = async () => {
+    try {
+      await axiosInstance.delete(API_PATHS.USERS.DELETE_USER(userId));
 
-  //     setOpenDeleteAlert(false);
-  //     toast.success("План удален");
-  //     navigate("/admin/plans");
-  //   } catch (error: unknown) {
-  //     if (error instanceof Error) {
-  //       console.error("Error deleting plan:", error.message);
-  //     } else {
-  //       console.error("Unexpected error:", error);
-  //     }
-  //   }
-  // };
+      setOpenDeleteAlert(false);
+      toast.success("Пользователь удален");
+      navigate("/admin/users");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error deleting user:", error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  };
 
-  // useEffect(() => {
-  //   if (planId) {
-  //     getPlanDetailsByID();
-  //   }
-  // }, [planId]);
+  useEffect(() => {
+    if (userId) {
+      getUserDetailsByID();
+    }
+  }, [userId]);
 
   return (
     <DashboardLayout activeMenu="Работники">
@@ -206,18 +196,17 @@ function CreateUser() {
           <div className="form-card col-span-3">
             <div className="flex items-center justify-between">
               <h2 className="text-xl md:text-xl font-medium">
-                Создать Работника
-                {/* {planId ? "Обновить План" : "Создать План"} */}
+                {userId ? "Обновить Работника" : "Создать Работника"}
               </h2>
 
-              {/* {planId && (
+              {userId && (
                 <button
                   className="flex items-center gap-1.5 text-[13px] font-medium text-rose-500 bg-rose-50 rounded px-2 py-1 border border-rose-100 hover:border-rose-300 cursor-pointer"
                   onClick={() => setOpenDeleteAlert(true)}
                 >
                   <LuTrash2 className="text-base" /> Удалить
                 </button>
-              )} */}
+              )}
             </div>
 
             <div className="mt-4">
@@ -253,13 +242,13 @@ function CreateUser() {
               />
             </div>
 
-            <div className="mt-3">
+            <div className="mt-3 relative">
               <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
                 Пароль
               </label>
 
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Впишите пароль"
                 className="form-input"
                 value={userData.password}
@@ -268,6 +257,18 @@ function CreateUser() {
                 }
                 required
               />
+
+              <button
+                type="button"
+                className="absolute right-2 bottom-[10px] text-slate-500 hover:text-slate-700"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? (
+                  <FaRegEyeSlash size={24} />
+                ) : (
+                  <FaRegEye size={24} />
+                )}
+              </button>
             </div>
 
             <div className="grid grid-cols-12 gap-4 mt-2">
@@ -320,24 +321,23 @@ function CreateUser() {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {/* {planId ? "Обновить План" : "Создать План"} */}Создать
-                Пользователя
+                {userId ? "Обновить Пользователя" : "Создать Пользователя"}
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* <Modal
+      <Modal
         isOpen={openDeleteAlert}
         onClose={() => setOpenDeleteAlert(false)}
-        title="Удалить План"
+        title="Удалить Пользователя"
       >
         <DeleteAlert
-          content="Вы уверены что хотите удалить план?"
-          onDelete={() => deletePlan()}
+          content="Вы уверены что хотите удалить пользователя ?"
+          onDelete={() => deleteUser()}
         />
-      </Modal> */}
+      </Modal>
     </DashboardLayout>
   );
 }
