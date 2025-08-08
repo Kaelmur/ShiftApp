@@ -107,7 +107,7 @@ function CreateUser() {
 
       toast.success("Пользователь успешно обновлен");
     } catch (error) {
-      console.error("Error updating task:", error);
+      console.error("Error updating user:", error);
     } finally {
       setLoading(false);
     }
@@ -260,7 +260,7 @@ function CreateUser() {
 
               <button
                 type="button"
-                className="absolute right-2 bottom-[10px] text-slate-500 hover:text-slate-700"
+                className="absolute right-2 bottom-[10px] text-slate-500 hover:text-slate-700 cursor-pointer"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
                 {showPassword ? (

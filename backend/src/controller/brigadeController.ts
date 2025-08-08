@@ -93,6 +93,94 @@ const createBrigade = async (
 };
 
 // Update brigade
+const updateBrigade = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    const user = req.user!;
+    const brigadeId = Number(req.params.id);
+    const { name, companyId } = req.body;
+
+    const brigade = await prisma.brigade.findUnique({
+      where: { id: brigadeId },
+      select: {
+        id: true,
+        name: true,
+        companyId: true,
+      },
+    });
+
+    if (!brigade) {
+      return res.status(404).json({ message: "Brigade not found" });
+    }
+
+    const isSuperAdmin = user.role === "SUPER_ADMIN";
+    const isAdmin = user.role === "ADMIN";
+
+    if (!isSuperAdmin) {
+      if (user.companyId !== brigade.companyId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+    }
+
+    const updateData: any = {};
+    if (name !== undefined) updateData.name = name;
+
+    if (companyId !== undefined && isSuperAdmin) {
+      updateData.companyId = companyId;
+    }
+
+    const updatedBrigade = await prisma.brigade.update({
+      where: { id: brigadeId },
+      data: updateData,
+      select: {
+        id: true,
+        name: true,
+        companyId: true,
+      },
+    });
+
+    res.json(updatedBrigade);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get Brigade by ID
+const getBrigadeById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    const brigadeId = Number(req.params.id);
+
+    if (isNaN(brigadeId)) {
+      return res.status(400).json({ message: "Invalid brigade ID." });
+    }
+
+    const brigade = await prisma.brigade.findUnique({
+      where: { id: brigadeId },
+      select: {
+        id: true,
+        name: true,
+        companyId: true,
+      },
+    });
+
+    if (brigade) {
+      return res.status(404).json({ message: "Brigade not found." });
+    }
+
+    return res.json(brigade);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Delete brigade
 const deleteBrigade = async (
   req: Request,
   res: Response,
@@ -100,7 +188,7 @@ const deleteBrigade = async (
 ): Promise<any> => {
   try {
     const user = req.user!;
-    const brigadeId = parseInt(req.params.id);
+    const brigadeId = Number(req.params.id);
 
     const brigade = await prisma.brigade.findUnique({
       where: { id: brigadeId },
@@ -138,4 +226,10 @@ const deleteBrigade = async (
   }
 };
 
-export { createBrigade, getBrigades, deleteBrigade };
+export {
+  createBrigade,
+  getBrigades,
+  deleteBrigade,
+  updateBrigade,
+  getBrigadeById,
+};

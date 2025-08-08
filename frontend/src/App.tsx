@@ -19,6 +19,7 @@ import ManageShifts from "./pages/Admin/ManageShifts";
 import ManageShiftsByUsers from "./pages/Admin/ManageShiftsByUsers";
 import MapPage from "./pages/Admin/MapPage";
 import CreateUser from "./pages/Admin/CreateUser";
+import CreateBrigade from "./pages/Admin/CreateBrigade";
 
 function App() {
   return (
@@ -40,6 +41,11 @@ function App() {
                 }
               >
                 <Route path="/admin/dashboard" element={<Dashboard />} />
+
+                <Route
+                  path="/admin/brigades/create"
+                  element={<CreateBrigade />}
+                />
                 <Route
                   path="/admin/brigade-users"
                   element={<ManageUsersByBrigade />}

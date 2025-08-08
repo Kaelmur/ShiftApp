@@ -8,6 +8,7 @@ import { API_PATHS } from "../../utils/apiPath";
 import moment from "moment/min/moment-with-locales";
 import Spinner from "@/components/Spinner";
 import BrigadeCard from "@/components/Cards/BrigadeCard";
+import { Button } from "@/components/ui/button";
 
 moment.locale("ru");
 
@@ -44,6 +45,12 @@ function Dashboard() {
     <DashboardLayout activeMenu="Бригады">
       <div>
         <div className="card my-5">
+          <Button
+            onClick={() => navigate("/admin/brigades/create")}
+            className="fixed bottom-6 right-6 z-50 bg-primary text-white dark:text-black px-5 py-5 rounded-full shadow-lg dark:shadow-sm shadow-gray-400 dark:shadow-gray-600 hover:bg-blue-700 dark:hover:bg-gray-400 transition cursor-pointer"
+          >
+            + Создать бригаду
+          </Button>
           <div>
             <div className="col-span-3">
               <h2 className="text-xl md:text-2xl">

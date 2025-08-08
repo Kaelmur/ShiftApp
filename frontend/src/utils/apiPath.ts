@@ -17,12 +17,20 @@ export const API_PATHS = {
   },
 
   BRIGADES: {
-    GET_ALL_BRIGADES: "/api/brigades/",
+    GET_ALL_BRIGADES: "/api/brigades",
+    CREATE_BRIGADE: "api/brigades/create",
+    UPDATE_BRIGADE: (brigadeId: string) => `/api/brigades/${brigadeId}`,
+    GET_BRIGADE_BY_ID: (brigadeId: string) => `/api/brigades/${brigadeId}`,
+    DELETE_BRIGADE: (brigadeId: string) => `/api/brigades/${brigadeId}`,
   },
 
   SHIFTS: {
     GET_ALL_SHIFTS: "/api/shifts/", // Get All Shifts
     GET_USERS_SHIFTS: (userId: string) => `/api/shifts/user/${userId}`, // Get User's shifts
+  },
+
+  COMPANIES: {
+    GET_ALL_COMPANIES: "/api/companies", // Get All Companies
   },
 
   REPORTS: {
