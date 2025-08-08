@@ -157,10 +157,6 @@ const getBrigadeById = async (
   try {
     const brigadeId = Number(req.params.id);
 
-    if (isNaN(brigadeId)) {
-      return res.status(400).json({ message: "Invalid brigade ID." });
-    }
-
     const brigade = await prisma.brigade.findUnique({
       where: { id: brigadeId },
       select: {
@@ -170,7 +166,7 @@ const getBrigadeById = async (
       },
     });
 
-    if (brigade) {
+    if (!brigade) {
       return res.status(404).json({ message: "Brigade not found." });
     }
 
