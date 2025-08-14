@@ -34,7 +34,7 @@ export const API_PATHS = {
   },
 
   REPORTS: {
-    EXPORT_TASKS: "/api/reports/export/tasks", // Download all tasks as an Excel file
-    EXPORT_USERS: "/api/reports/export/shifts", // Download user-task report
+    EXPORT_Shifts: "/api/reports/export/shifts", // Download all shifts report
+    EXPORT_USERS: "/api/reports/export/users", // Download user-task report
   },
 };

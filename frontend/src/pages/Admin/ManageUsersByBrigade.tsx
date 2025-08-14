@@ -41,7 +41,7 @@ function ManageUsersByBrigade() {
   const handleDownload = async (month: number, year: number) => {
     try {
       const res = await axiosInstance.get(
-        `${API_PATHS.REPORTS.EXPORT_TASKS}?brigadeId=${brigadeId}&month=${month}&year=${year}`,
+        `${API_PATHS.REPORTS.EXPORT_SHIFTS}?brigadeId=${brigadeId}&month=${month}&year=${year}`,
         { responseType: "blob" }
       );
 
