@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import excelJS from "exceljs";
 import { PrismaClient } from "@prisma/client";
+import { DateTime } from "luxon";
 
 const prisma = new PrismaClient();
 
@@ -130,4 +131,84 @@ const exportUsersReport = async (
   }
 };
 
-export { exportUsersReport };
+const exportShiftsReport = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { brigadeId, month, year } = req.query;
+
+    if (!brigadeId || !month || !year) {
+      return res.status(400).json({ message: "Missing parameters" });
+    }
+
+    const startDate = DateTime.local(Number(year), Number(month), 1).toJSDate();
+    const endDate = DateTime.local(Number(year), Number(month), 1)
+      .endOf("month")
+      .toJSDate();
+
+    const shifts = await prisma.shift.findMany({
+      where: {
+        brigadeId: Number(brigadeId),
+        startedAt: { gte: startDate, lte: endDate },
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            brigade: { select: { name: true } },
+          },
+        },
+      },
+    });
+
+    const data: {
+      name: string;
+      brigade: string;
+      date: string;
+      hours: number;
+    }[] = [];
+
+    shifts.forEach((shift) => {
+      const start = DateTime.fromJSDate(shift.startedAt);
+      const end = DateTime.fromJSDate(shift.endedAt!);
+      const hours = end.diff(start, "hours").hours;
+
+      data.push({
+        name: shift.user.name,
+        brigade: shift.user.brigade?.name || "-",
+        date: start.toFormat("dd.MM.yyyy"),
+        hours: Math.round(hours * 100) / 100,
+      });
+    });
+
+    const workbook = new excelJS.Workbook();
+    const sheet = workbook.addWorksheet("Отчёт");
+
+    sheet.columns = [
+      { header: "Имя", key: "name", width: 25 },
+      { header: "Бригада", key: "brigade", width: 20 },
+      { header: "Дата", key: "date", width: 15 },
+      { header: "Часы", key: "hours", width: 10 },
+    ];
+
+    sheet.addRows(data);
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="report_${year}_${month}.xlsx"`
+    );
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { exportUsersReport, exportShiftsReport };

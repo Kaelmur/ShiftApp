@@ -9,8 +9,19 @@ type ModalProps = {
 
 const Modal: React.FC<ModalProps> = ({ children, isOpen, onClose, title }) => {
   if (!isOpen) return null;
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Close only if the click is on the overlay itself
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-[calc(100%-1rem)] max-h-full overflow-y-auto overflow-x-hidden bg-black/20 bg-opacity-50">
+    <div
+      onClick={handleOverlayClick}
+      className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-[calc(100%-1rem)] max-h-full overflow-y-auto overflow-x-hidden bg-black/20 bg-opacity-50"
+    >
       <div className="relative p-4 w-full max-w-2xl max-h-full">
         {/* Modal content */}
         <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-800">

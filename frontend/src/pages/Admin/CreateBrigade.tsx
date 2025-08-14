@@ -4,11 +4,11 @@ import { API_PATHS } from "../../utils/apiPath";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LuTrash2 } from "react-icons/lu";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import DeleteAlert from "../../components/DeleteAlert";
 import SelectDropdown from "@/components/Inputs/SelectDropdown";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { UserContext } from "@/context/userContext";
 
 type BrigadeData = {
   name: string;
@@ -16,6 +16,7 @@ type BrigadeData = {
 };
 
 function CreateBrigade() {
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -197,24 +198,25 @@ function CreateBrigade() {
                 required
               />
             </div>
+            {user?.role === "SUPER_ADMIN" && (
+              <div className="mt-3">
+                <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
+                  Компания
+                </label>
 
-            <div className="mt-3">
-              <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                Компания
-              </label>
-
-              <SelectDropdown
-                options={companies.map((company) => ({
-                  label: company.name,
-                  value: company.id,
-                }))}
-                value={brigadeData.companyId}
-                onChange={(value) =>
-                  handleValueChange("companyId", value as number)
-                }
-                placeholder="Выберите Компанию"
-              />
-            </div>
+                <SelectDropdown
+                  options={companies.map((company) => ({
+                    label: company.name,
+                    value: company.id,
+                  }))}
+                  value={brigadeData.companyId}
+                  onChange={(value) =>
+                    handleValueChange("companyId", value as number)
+                  }
+                  placeholder="Выберите Компанию"
+                />
+              </div>
+            )}
 
             {error && (
               <p className="text-xs font-medium text-red-500 mt-5">{error}</p>
