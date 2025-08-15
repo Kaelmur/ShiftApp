@@ -365,3 +365,22 @@ export const getUserById = async (
     next(err);
   }
 };
+
+export const saveExpoToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    const { expoPushToken } = req.body;
+    const userId = req.user.id;
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { expoPushToken },
+    });
+    res.json({ message: "Token saved" });
+  } catch (err) {
+    next(err);
+  }
+};

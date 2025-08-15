@@ -108,8 +108,8 @@ function CreateBrigade() {
       setError("Название бригады обязательно.");
       return;
     }
-    if (!brigadeData.companyId) {
-      setError("Компания обязательна.");
+    if (user?.role === "SUPER_ADMIN" && !brigadeData.companyId) {
+      setError("Компания обязательна для супер-администратора.");
       return;
     }
 

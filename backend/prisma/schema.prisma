@@ -28,6 +28,7 @@ model User {
   brigadeId Int?
   brigade   Brigade? @relation(fields: [brigadeId], references: [id])
   shifts    Shift[]  @relation("UserShifts")
+  expoPushToken String?
   createdAt DateTime @default(now())
 }
 

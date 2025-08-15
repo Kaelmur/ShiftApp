@@ -9,6 +9,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
 import { LuFileSpreadsheet } from "react-icons/lu";
 import Modal from "@/components/Modal";
+import { Button } from "@/components/ui/button";
+import DeleteAlert from "@/components/DeleteAlert";
 
 interface User {
   id: string;
@@ -30,12 +32,27 @@ function ManageUsersByBrigade() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [months, setMonths] = useState<
     { name: string; month: number; year: number }[]
   >([]);
 
   const handleUserClick = (userId: string) => {
     navigate(`/admin/users/${userId}/shifts`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axiosInstance.delete(API_PATHS.BRIGADES.DELETE_BRIGADE(brigadeId));
+      toast.success("Бригада удалена успешно.");
+    } catch (error) {
+      console.error(error);
+      toast.error(error as string);
+      alert("Something went wrong");
+    } finally {
+      setShowModal(false);
+      navigate("/admin/dashboard");
+    }
   };
 
   const handleDownload = async (month: number, year: number) => {
@@ -48,7 +65,7 @@ function ManageUsersByBrigade() {
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `report_${year}_${month}.xlsx`);
+      link.setAttribute("download", `табель_${year}_${month}.xlsx`);
       document.body.appendChild(link);
       link.click();
     } catch (err) {
@@ -77,9 +94,9 @@ function ManageUsersByBrigade() {
     const lastSixMonths = Array.from({ length: 6 }, (_, i) => {
       const date = now.minus({ months: i });
       return {
-        name: date.toFormat("LLLL yyyy"), // "август 2025"
-        month: date.month, // 8
-        year: date.year, // 2025
+        name: date.toFormat("LLLL yyyy"),
+        month: date.month,
+        year: date.year,
       };
     });
     setMonths(lastSixMonths);
@@ -98,6 +115,12 @@ function ManageUsersByBrigade() {
         </div>
       ) : (
         <div className="mt-5 mb-10">
+          <Button
+            onClick={() => setShowModal(true)}
+            className="fixed bottom-6 right-6 z-50 bg-red-500 text-white dark:text-black px-5 py-5 rounded-full shadow-lg dark:shadow-sm shadow-gray-400 dark:shadow-gray-600 hover:bg-red-700 dark:hover:bg-gray-400 transition cursor-pointer"
+          >
+            Удалить бригаду
+          </Button>
           <div className="flex md:flex-row md:items-center justify-between">
             <h2 className="text-xl md:text-xl font-medium">
               Работники бригады: {users[0]?.brigade.name || "Неизвестно"}
@@ -144,6 +167,18 @@ function ManageUsersByBrigade() {
             </button>
           ))}
         </div>
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title="Удалить Бригаду"
+      >
+        <DeleteAlert
+          content="Вы уверены что хотите удалить бригаду?"
+          onDelete={() => handleDelete()}
+        />
       </Modal>
     </DashboardLayout>
   );

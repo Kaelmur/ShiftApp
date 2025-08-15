@@ -34,7 +34,7 @@ export const API_PATHS = {
   },
 
   REPORTS: {
-    EXPORT_Shifts: "/api/reports/export/shifts", // Download all shifts report
+    EXPORT_SHIFTS: "/api/reports/export/shifts", // Download all shifts report
     EXPORT_USERS: "/api/reports/export/users", // Download user-task report
   },
 };

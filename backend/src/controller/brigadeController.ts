@@ -196,6 +196,7 @@ const deleteBrigade = async (
 
     // SUPERADMIN can delete any
     if (user.role === "SUPER_ADMIN") {
+      await prisma.shift.deleteMany({ where: { brigadeId } });
       await prisma.brigade.delete({ where: { id: brigadeId } });
       return res
         .status(200)
@@ -210,6 +211,7 @@ const deleteBrigade = async (
         });
       }
 
+      await prisma.shift.deleteMany({ where: { brigadeId } });
       await prisma.brigade.delete({ where: { id: brigadeId } });
       return res.status(200).json({ message: "Brigade deleted by admin" });
     }
