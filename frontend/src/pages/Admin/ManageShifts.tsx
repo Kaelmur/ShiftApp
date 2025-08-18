@@ -4,6 +4,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPath";
 import Spinner from "@/components/Spinner";
 import ShiftCard from "../../components/Cards/ShiftCard";
+import Pagination from "@/components/Pagination";
 
 interface Shift {
   id: number;
@@ -26,6 +27,10 @@ interface Shift {
 function ManageShifts() {
   const [allShifts, setAllShifts] = useState<Shift[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [shiftsPerPage] = useState(3);
 
   const getAllShifts = async () => {
     setLoading(true);
@@ -50,6 +55,10 @@ function ManageShifts() {
     getAllShifts();
   }, []);
 
+  const indexOfLastShift = currentPage * shiftsPerPage;
+  const indexOfFirstShift = indexOfLastShift - shiftsPerPage;
+  const currentShifts = allShifts.slice(indexOfFirstShift, indexOfLastShift);
+
   return (
     <DashboardLayout activeMenu="Смены">
       <div className="my-5">
@@ -64,11 +73,24 @@ function ManageShifts() {
             <Spinner />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            {allShifts?.map((shift) => (
-              <ShiftCard key={shift.id} {...shift} />
-            ))}
-          </div>
+          <>
+            {allShifts.length === 0 ? (
+              <p className="mt-10 text-slate-500">Смены отсутствуют</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                {currentShifts.map((shift) => (
+                  <ShiftCard key={shift.id} {...shift} />
+                ))}
+              </div>
+            )}
+
+            <Pagination
+              itemsPerPage={shiftsPerPage}
+              totalItems={allShifts.length}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
+          </>
         )}
       </div>
     </DashboardLayout>

@@ -1,5 +1,6 @@
 import ShiftCard from "@/components/Cards/ShiftCard";
 import DashboardLayout from "@/components/DashboardLayout";
+import Pagination from "@/components/Pagination";
 import Spinner from "@/components/Spinner";
 import { API_PATHS } from "@/utils/apiPath";
 import axiosInstance from "@/utils/axiosInstance";
@@ -30,6 +31,9 @@ function ManageShiftsByUsers() {
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState<string>("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [shiftsPerPage] = useState(3);
 
   const handleClick = (shiftId: number) => {
     navigate(`/admin/shifts/${shiftId}/locations`);
@@ -69,6 +73,10 @@ function ManageShiftsByUsers() {
     getAllShifts();
   }, []);
 
+  const indexOfLastShift = currentPage * shiftsPerPage;
+  const indexOfFirstShift = indexOfLastShift - shiftsPerPage;
+  const currentShifts = shifts.slice(indexOfFirstShift, indexOfLastShift);
+
   return (
     <DashboardLayout activeMenu="Смены">
       <div className="my-5">
@@ -90,7 +98,7 @@ function ManageShiftsByUsers() {
               <p className="mt-10 text-slate-500">Смены отсутствуют</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                {shifts.map((shift) => (
+                {currentShifts.map((shift) => (
                   <ShiftCard
                     key={shift.id}
                     {...shift}
@@ -99,6 +107,12 @@ function ManageShiftsByUsers() {
                 ))}
               </div>
             )}
+            <Pagination
+              itemsPerPage={shiftsPerPage}
+              totalItems={shifts.length}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
           </>
         )}
       </div>
