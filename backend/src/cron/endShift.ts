@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 cron.schedule(
-  "15 10 * * *",
+  "25 10 * * *",
   async () => {
     const now = DateTime.now().setZone("Asia/Almaty");
 
