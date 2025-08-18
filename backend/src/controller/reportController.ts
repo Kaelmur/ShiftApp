@@ -152,6 +152,7 @@ const exportShiftsReport = async (
       where: {
         brigadeId: Number(brigadeId),
         startedAt: { gte: startDate, lte: endDate },
+        NOT: { endedAt: null },
       },
       include: {
         user: {
@@ -197,6 +198,8 @@ const exportShiftsReport = async (
       { header: "Дата", key: "date", width: 15 },
       { header: "Часы", key: "hours", width: 10, style: { numFmt: "hh:mm" } },
     ];
+
+    sheet.getColumn("hours").numFmt = "HH:mm";
 
     sheet.addRows(data);
 
