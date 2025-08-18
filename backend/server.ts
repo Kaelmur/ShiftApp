@@ -36,7 +36,7 @@ const config = {
 };
 
 // Cron Job for automatically end shift at 5 pm
-// import "./src/cron/endShift";
+import "./src/cron/endShift";
 
 app.listen(config.port, () =>
   console.log(`Server running on port ${config.port}`)
