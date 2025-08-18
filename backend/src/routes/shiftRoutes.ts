@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { adminOnly, protect } from "../middlewares/authMiddleware";
 import {
+  checkActiveShift,
   endShift,
   getAllShifts,
   getShiftsByUserId,
@@ -19,5 +20,7 @@ router.get("/", protect, adminOnly, getAllShifts);
 router.get("/user/:userId", protect, adminOnly, getShiftsByUserId);
 router.get("/:shiftId/locations", protect, adminOnly, getLocations);
 router.post("/shift-location", protect, createShiftLocation);
+
+router.get("/shifts/active", protect, checkActiveShift);
 
 export default router;

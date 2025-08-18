@@ -173,3 +173,21 @@ export const getShiftsByUserId = async (
     next(error);
   }
 };
+
+// polling checking
+
+export const checkActiveShift = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user.id;
+    const activeShift = await prisma.shift.findFirst({
+      where: { userId, status: "active" },
+    });
+    res.json(activeShift);
+  } catch (err) {
+    next(err);
+  }
+};
