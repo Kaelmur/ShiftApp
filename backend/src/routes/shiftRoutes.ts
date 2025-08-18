@@ -21,6 +21,6 @@ router.get("/user/:userId", protect, adminOnly, getShiftsByUserId);
 router.get("/:shiftId/locations", protect, adminOnly, getLocations);
 router.post("/shift-location", protect, createShiftLocation);
 
-router.get("/shifts/active", protect, checkActiveShift);
+router.get("/active", protect, checkActiveShift);
 
 export default router;
