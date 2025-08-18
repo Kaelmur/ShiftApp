@@ -173,13 +173,18 @@ const exportShiftsReport = async (
     shifts.forEach((shift) => {
       const start = DateTime.fromJSDate(shift.startedAt);
       const end = DateTime.fromJSDate(shift.endedAt!);
-      const hours = end.diff(start, "hours").hours;
+
+      const diff = end.diff(start, ["hours", "minutes"]);
+      const hours = diff.hours;
+      const minutes = diff.minutes;
+
+      const excelTime = (hours * 60 + minutes) / (24 * 60);
 
       data.push({
         name: shift.user.name,
         brigade: shift.user.brigade?.name || "-",
         date: start.toFormat("dd.MM.yyyy"),
-        hours: Math.round(hours * 100) / 100,
+        hours: excelTime,
       });
     });
 
@@ -190,7 +195,7 @@ const exportShiftsReport = async (
       { header: "Имя", key: "name", width: 25 },
       { header: "Бригада", key: "brigade", width: 20 },
       { header: "Дата", key: "date", width: 15 },
-      { header: "Часы", key: "hours", width: 10 },
+      { header: "Часы", key: "hours", width: 10, style: { numFmt: "hh:mm" } },
     ];
 
     sheet.addRows(data);
