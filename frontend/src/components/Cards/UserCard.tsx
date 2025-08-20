@@ -1,21 +1,3 @@
-interface UserInfo {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  role: string;
-  brigade: {
-    name: string;
-  };
-  onClick: () => void;
-}
-
-interface UserCardProps {
-  userInfo: UserInfo;
-  onClick?: () => void;
-}
-
 function UserCard({ userInfo, onClick }: UserCardProps) {
   return (
     <div className="user-card p-2" onClick={onClick}>

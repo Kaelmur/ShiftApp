@@ -15,7 +15,7 @@ moment.locale("ru");
 function Dashboard() {
   useUserAuth();
 
-  const [brigades, setBrigades] = useState([]);
+  const [brigades, setBrigades] = useState<Brigade[]>([]);
   const [loading, setLoading] = useState(false);
 
   const { user } = useContext(UserContext);

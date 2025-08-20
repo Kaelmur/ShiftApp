@@ -9,19 +9,6 @@ import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "ADMIN" | "SUPER_ADMIN";
-  brigade: {
-    name: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-  onClick: () => void;
-}
-
 function ManageUsers() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);

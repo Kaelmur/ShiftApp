@@ -6,24 +6,6 @@ import Spinner from "@/components/Spinner";
 import ShiftCard from "../../components/Cards/ShiftCard";
 import Pagination from "@/components/Pagination";
 
-interface Shift {
-  id: number;
-  status: string;
-  startedAt: string;
-  endedAt: string;
-  durationHours: number;
-  user: {
-    name: string;
-    email: string;
-  };
-  company: {
-    name: string;
-  };
-  brigade: {
-    name: string;
-  } | null;
-}
-
 function ManageShifts() {
   const [allShifts, setAllShifts] = useState<Shift[]>([]);
   const [loading, setLoading] = useState(false);
@@ -46,10 +28,6 @@ function ManageShifts() {
       setLoading(false);
     }
   };
-
-  // const handleClick = (taskData: Task) => {
-  //   navigate("/admin/create-task", { state: { taskId: taskData._id } });
-  // };
 
   useEffect(() => {
     getAllShifts();

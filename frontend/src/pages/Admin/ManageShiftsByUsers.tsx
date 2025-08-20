@@ -7,24 +7,6 @@ import axiosInstance from "@/utils/axiosInstance";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-interface Shift {
-  id: number;
-  status: string;
-  startedAt: string;
-  endedAt: string;
-  durationHours: number;
-  user: {
-    name: string;
-    email: string;
-  };
-  company: {
-    name: string;
-  };
-  brigade: {
-    name: string;
-  } | null;
-}
-
 function ManageShiftsByUsers() {
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -32,6 +14,7 @@ function ManageShiftsByUsers() {
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState<string>("");
 
+  // pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [shiftsPerPage] = useState(3);
 
@@ -64,10 +47,6 @@ function ManageShiftsByUsers() {
       setLoading(false);
     }
   };
-
-  // const handleClick = (taskData: Task) => {
-  //   navigate("/admin/create-task", { state: { taskId: taskData._id } });
-  // };
 
   useEffect(() => {
     getAllShifts();

@@ -10,15 +10,6 @@ import DeleteAlert from "../../components/DeleteAlert";
 import SelectDropdown from "@/components/Inputs/SelectDropdown";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
-type UserData = {
-  name: string;
-  email: string;
-  password: string;
-  role?: "WORKER" | "ADMIN";
-  companyId: number;
-  brigadeId: number;
-};
-
 function CreateUser() {
   const navigate = useNavigate();
 
@@ -37,7 +28,7 @@ function CreateUser() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState<boolean>(false);
-  const [brigades, setBrigades] = useState<{ id: number; name: string }[]>([]);
+  const [brigades, setBrigades] = useState<Brigade[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {

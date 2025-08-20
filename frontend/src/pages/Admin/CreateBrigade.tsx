@@ -10,11 +10,6 @@ import DeleteAlert from "../../components/DeleteAlert";
 import SelectDropdown from "@/components/Inputs/SelectDropdown";
 import { UserContext } from "@/context/userContext";
 
-type BrigadeData = {
-  name: string;
-  companyId: number | null;
-};
-
 function CreateBrigade() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -50,9 +45,9 @@ function CreateBrigade() {
     fetchCompanies();
   }, []);
 
-  const handleValueChange = <K extends keyof BrigadeData>(
+  const handleValueChange = <K extends keyof Brigade>(
     key: K,
-    value: BrigadeData[K]
+    value: Brigade[K]
   ) => {
     setBrigadeData((prevData) => ({ ...prevData, [key]: value }));
   };

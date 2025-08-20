@@ -12,19 +12,6 @@ import Modal from "@/components/Modal";
 import { Button } from "@/components/ui/button";
 import DeleteAlert from "@/components/DeleteAlert";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "ADMIN" | "SUPER_ADMIN";
-  brigade: {
-    name: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-  onClick: () => void;
-}
-
 function ManageUsersByBrigade() {
   const navigate = useNavigate();
   const location = useLocation();

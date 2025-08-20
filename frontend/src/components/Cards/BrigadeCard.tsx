@@ -2,13 +2,6 @@ import moment from "moment/min/moment-with-locales";
 
 moment.locale("ru");
 
-interface BrigadeCardProps {
-  id: number;
-  name: string;
-  userCount: number;
-  onClick: () => void;
-}
-
 function BrigadeCard({ name, userCount, onClick }: BrigadeCardProps) {
   return (
     <div

@@ -4,7 +4,6 @@ import { API_PATHS } from "../../utils/apiPath";
 import { LuUsers } from "react-icons/lu";
 import Modal from "../Modal";
 import AvatarGroup from "../AvatarGroup";
-// ../assets/images/default.png
 import DEFAULT_AVATAR from "../../assets/images/default.png";
 
 type User = {
