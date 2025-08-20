@@ -3,6 +3,7 @@ import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import SideMenu from "./SideMenu";
 import { gsap } from "gsap";
 import { ModeToggle } from "./mode-toggle";
+import { useNavigate } from "react-router-dom";
 
 function Navbar({
   activeMenu,
@@ -13,6 +14,8 @@ function Navbar({
 }) {
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const sideMenuRef = useRef<HTMLDivElement>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const menu = sideMenuRef.current;
@@ -72,7 +75,10 @@ function Navbar({
         )}
       </button>
 
-      <h2 className="text-lg font-medium text-black dark:text-white">
+      <h2
+        className="text-lg font-medium text-black dark:text-white cursor-pointer"
+        onClick={() => navigate("/admin/dashboard")}
+      >
         Shift App
       </h2>
 
