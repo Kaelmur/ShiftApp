@@ -31,6 +31,10 @@ export const API_PATHS = {
 
   COMPANIES: {
     GET_ALL_COMPANIES: "/api/companies", // Get All Companies
+    CREATE_COMPANY: "/api/companies", // Create company
+    UPDATE_COMPANY: (companyId: string) => `/api/companies/${companyId}`,
+    DELETE_COMPANY: (companyId: string) => `/api/companies/${companyId}`,
+    GET_COMPANY_BY_ID: (companyId: string) => `/api/companies/${companyId}`,
   },
 
   REPORTS: {

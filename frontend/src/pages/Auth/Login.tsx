@@ -47,7 +47,7 @@ function Login() {
         localStorage.setItem("token", token);
         updateUser(response.data);
 
-        navigate("/admin/dashboard");
+        navigate("/");
       }
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;

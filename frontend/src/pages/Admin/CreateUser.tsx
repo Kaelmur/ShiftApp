@@ -4,17 +4,20 @@ import { API_PATHS } from "../../utils/apiPath";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LuTrash2 } from "react-icons/lu";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import DeleteAlert from "../../components/DeleteAlert";
 import SelectDropdown from "@/components/Inputs/SelectDropdown";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { UserContext } from "@/context/userContext";
 
 function CreateUser() {
   const navigate = useNavigate();
 
   const location = useLocation();
   const { userId } = location.state || {};
+
+  const { user } = useContext(UserContext);
 
   const [userData, setUserData] = useState({
     name: "",
@@ -29,6 +32,7 @@ function CreateUser() {
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState<boolean>(false);
   const [brigades, setBrigades] = useState<Brigade[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -44,6 +48,21 @@ function CreateUser() {
       }
     };
 
+    if (user?.role === "SUPER_ADMIN") {
+      const fetchCompanies = async () => {
+        try {
+          const response = await axiosInstance.get(
+            API_PATHS.COMPANIES.GET_ALL_COMPANIES
+          );
+          setCompanies(response.data);
+        } catch (err) {
+          console.error("Ошибка при получении компаний", err);
+          setCompanies([]);
+        }
+      };
+
+      fetchCompanies();
+    }
     fetchBrigades();
   }, []);
 
@@ -66,7 +85,7 @@ function CreateUser() {
     });
   };
 
-  // Create Plan
+  // Create User
   const createUser = async () => {
     setLoading(true);
 
@@ -263,7 +282,11 @@ function CreateUser() {
             </div>
 
             <div className="grid grid-cols-12 gap-4 mt-2">
-              <div className="col-span-6 md:col-span-6">
+              <div
+                className={`${
+                  user?.role === "SUPER_ADMIN" ? "col-span-4" : "col-span-6"
+                }`}
+              >
                 <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
                   Роль
                 </label>
@@ -280,7 +303,11 @@ function CreateUser() {
                 />
               </div>
 
-              <div className="col-span-6 md:col-span-6">
+              <div
+                className={`${
+                  user?.role === "SUPER_ADMIN" ? "col-span-4" : "col-span-6"
+                }`}
+              >
                 <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
                   Бригада
                 </label>
@@ -300,6 +327,33 @@ function CreateUser() {
                   placeholder="Выберите Бригаду"
                 />
               </div>
+
+              {user?.role === "SUPER_ADMIN" && (
+                <div
+                  className={`${
+                    user?.role === "SUPER_ADMIN" ? "col-span-4" : "col-span-6"
+                  }`}
+                >
+                  <label className="text-xs font-medium text-slate-600 dark:text-slate-300">
+                    Компания
+                  </label>
+
+                  <SelectDropdown
+                    options={companies.map((company) => ({
+                      label: company.name,
+                      value: company.id,
+                    }))}
+                    value={userData.companyId}
+                    onChange={(value) =>
+                      handleValueChange(
+                        "companyId",
+                        value as UserData["companyId"]
+                      )
+                    }
+                    placeholder="Выберите Компанию"
+                  />
+                </div>
+              )}
             </div>
 
             {error && (

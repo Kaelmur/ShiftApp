@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
-import { SIDE_MENU_DATA } from "../utils/data";
+import { SIDE_MENU_DATA, SIDE_MENU_SUPER_ADMIN_DATA } from "../utils/data";
 import { IconType } from "react-icons";
 import DEFAULT_AVATAR from "../assets/images/default.png";
 
@@ -35,9 +35,7 @@ function SideMenu({ activeMenu, onLogoutClick }: SideMenuProps) {
   useEffect(() => {
     if (user) {
       setSideMenuData(
-        user.role === "ADMIN" || user.role === "SUPER_ADMIN"
-          ? SIDE_MENU_DATA
-          : SIDE_MENU_USER_DATA
+        user.role === "ADMIN" ? SIDE_MENU_DATA : SIDE_MENU_SUPER_ADMIN_DATA
       );
     }
   }, [user]);
@@ -46,7 +44,7 @@ function SideMenu({ activeMenu, onLogoutClick }: SideMenuProps) {
       <div className="flex flex-col items-center justify-center mb-7 pt-5">
         <div className="relative">
           <img
-            src={user?.profileImageUrl || DEFAULT_AVATAR}
+            src={DEFAULT_AVATAR}
             alt="Profile Image"
             className="w-20 h-20 bg-slate-400 rounded-full"
           />

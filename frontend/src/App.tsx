@@ -20,6 +20,8 @@ import ManageShiftsByUsers from "./pages/Admin/ManageShiftsByUsers";
 import MapPage from "./pages/Admin/MapPage";
 import CreateUser from "./pages/Admin/CreateUser";
 import CreateBrigade from "./pages/Admin/CreateBrigade";
+import ManageCompanies from "./pages/Super_Admin/ManageCompanies";
+import CreateCompany from "./pages/Admin/CreateCompany";
 
 function App() {
   return (
@@ -32,6 +34,11 @@ function App() {
               <Route
                 path="/unauthorized"
                 element={<div>Unauthorized Access</div>}
+              />
+
+              <Route
+                path="/"
+                element={<Navigate to="/admin/dashboard" replace />}
               />
 
               {/* Admin Routes */}
@@ -62,6 +69,18 @@ function App() {
                 <Route path="/admin/users" element={<ManageUsers />} />
 
                 <Route path="/admin/users/create" element={<CreateUser />} />
+              </Route>
+
+              <Route element={<PrivateRoute allowedRoles={["SUPER_ADMIN"]} />}>
+                <Route
+                  path="/superadmin/companies"
+                  element={<ManageCompanies />}
+                />
+
+                <Route
+                  path="/superadmin/companies/create"
+                  element={<CreateCompany />}
+                />
               </Route>
 
               {/* Default Route */}

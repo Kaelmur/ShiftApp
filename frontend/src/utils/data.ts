@@ -1,10 +1,4 @@
-import {
-  LuLayoutDashboard,
-  LuUsers,
-  LuClipboardCheck,
-  LuLogOut,
-  LuUser,
-} from "react-icons/lu";
+import { LuUsers, LuClipboardCheck, LuLogOut, LuUser } from "react-icons/lu";
 
 export const SIDE_MENU_DATA = [
   {
@@ -33,21 +27,33 @@ export const SIDE_MENU_DATA = [
   },
 ];
 
-export const SIDE_MENU_SUPERADMIN_DATA = [
+export const SIDE_MENU_SUPER_ADMIN_DATA = [
   {
     id: "01",
-    label: "Главная",
-    icon: LuLayoutDashboard,
-    path: "/user/dashboard",
+    label: "Бригады",
+    icon: LuUsers,
+    path: "/admin/dashboard",
   },
   {
     id: "02",
-    label: "Мои Задачи",
+    label: "Смены",
     icon: LuClipboardCheck,
-    path: "/user/tasks",
+    path: "/admin/shifts",
+  },
+  {
+    id: "04",
+    label: "Работники",
+    icon: LuUser,
+    path: "/admin/users",
   },
   {
     id: "05",
+    label: "Компании",
+    icon: LuUser,
+    path: "/superadmin/companies",
+  },
+  {
+    id: "06",
     label: "Выйти",
     icon: LuLogOut,
     path: "/logout",
