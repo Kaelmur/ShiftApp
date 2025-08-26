@@ -210,6 +210,12 @@ const exportShiftsReport = async (
       counter++;
     });
 
+    sheet.eachRow((row) => {
+      row.eachCell((cell) => {
+        cell.alignment = { vertical: "middle", horizontal: "center" };
+      });
+    });
+
     res.setHeader(
       "Content-Disposition",
       `attachment; filename="report_${year}_${month}.xlsx"`
