@@ -50,13 +50,23 @@ function MapPage() {
           className="h-full w-full rounded-lg shadow"
         >
           <LayersControl position="topright">
-            <LayersControl.BaseLayer checked name="OpenStreetMap">
+            <LayersControl.BaseLayer checked name="Светлая">
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             </LayersControl.BaseLayer>
-            <LayersControl.BaseLayer name="Dark">
+            <LayersControl.BaseLayer name="Темная">
               <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
             </LayersControl.BaseLayer>
+
+            <LayersControl.BaseLayer name="Спутник">
+              <TileLayer
+                url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                attribution="&copy; <a href='https://www.esri.com/'>Esri</a>, 
+      Earthstar Geographics"
+                maxZoom={17}
+              />
+            </LayersControl.BaseLayer>
           </LayersControl>
+
           {locations.map((loc) => (
             <Marker key={loc.id} position={[loc.latitude, loc.longitude]}>
               <Popup>

@@ -143,65 +143,76 @@ const exportShiftsReport = async (
       return res.status(400).json({ message: "Missing parameters" });
     }
 
-    const startDate = DateTime.local(Number(year), Number(month), 1).toJSDate();
-    const endDate = DateTime.local(Number(year), Number(month), 1)
-      .endOf("month")
-      .toJSDate();
+    const startDate = DateTime.local(Number(year), Number(month), 1);
+    const endDate = startDate.endOf("month");
+    const daysInMonth = endDate.day;
 
     const shifts = await prisma.shift.findMany({
       where: {
         brigadeId: Number(brigadeId),
-        startedAt: { gte: startDate, lte: endDate },
+        startedAt: { gte: startDate.toJSDate(), lte: endDate.toJSDate() },
         NOT: { endedAt: null },
       },
       include: {
         user: {
-          select: {
-            name: true,
-            brigade: { select: { name: true } },
-          },
+          select: { name: true },
         },
       },
     });
 
-    const data: {
-      name: string;
-      brigade: string;
-      date: string;
-      hours: number;
-    }[] = [];
+    // Группируем по пользователям и дням
+    const userMap: Record<string, { [day: number]: number }> = {};
 
     shifts.forEach((shift) => {
       const start = DateTime.fromJSDate(shift.startedAt);
       const end = DateTime.fromJSDate(shift.endedAt!);
 
       const diff = end.diff(start, ["hours", "minutes"]);
-      const hours = diff.hours;
-      const minutes = diff.minutes;
+      const totalMinutes = diff.hours * 60 + diff.minutes;
+      const excelTime = totalMinutes / (24 * 60);
 
-      const excelTime = (hours * 60 + minutes) / (24 * 60);
+      const userName = shift.user.name;
+      const day = start.day;
 
-      data.push({
-        name: shift.user.name,
-        brigade: shift.user.brigade?.name || "-",
-        date: start.toFormat("dd.MM.yyyy"),
-        hours: excelTime,
-      });
+      if (!userMap[userName]) {
+        userMap[userName] = {};
+      }
+
+      // Если несколько смен в день — суммируем
+      userMap[userName][day] = (userMap[userName][day] || 0) + excelTime;
     });
 
     const workbook = new excelJS.Workbook();
     const sheet = workbook.addWorksheet("Отчёт");
 
-    sheet.columns = [
-      { header: "Имя", key: "name", width: 25 },
-      { header: "Бригада", key: "brigade", width: 20 },
-      { header: "Дата", key: "date", width: 15 },
-      { header: "Часы", key: "hours", width: 10, style: { numFmt: "hh:mm" } },
+    // Первая строка: #, ФИО, числа месяца
+    const header = [
+      "#",
+      "ФИО",
+      ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
     ];
+    sheet.addRow(header);
 
-    sheet.getColumn("hours").numFmt = "HH:mm";
+    // Данные по пользователям
+    let rowIndex = 1;
+    Object.entries(userMap).forEach(([userName, days]) => {
+      const row: (string | number)[] = [rowIndex, userName];
+      for (let d = 1; d <= daysInMonth; d++) {
+        row.push(days[d] || "");
+      }
+      sheet.addRow(row);
+      rowIndex++;
+    });
 
-    sheet.addRows(data);
+    // Устанавливаем формат времени для всех колонок с днями
+    for (let i = 3; i <= daysInMonth + 2; i++) {
+      sheet.getColumn(i).numFmt = "HH:mm";
+      sheet.getColumn(i).width = 8;
+    }
+
+    // Ширина колонок # и ФИО
+    sheet.getColumn(1).width = 5;
+    sheet.getColumn(2).width = 25;
 
     res.setHeader(
       "Content-Disposition",
