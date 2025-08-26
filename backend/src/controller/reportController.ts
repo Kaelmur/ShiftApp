@@ -204,7 +204,12 @@ const exportShiftsReport = async (
     Object.entries(usersMap).forEach(([name, days]) => {
       const row: any[] = [counter, name];
       for (let d = 1; d <= daysInMonth; d++) {
-        row.push(days[d] || 0);
+        const value = days[d];
+        if (value && value > 0) {
+          row.push(value); // excelTime fraction of a day
+        } else {
+          row.push(""); // leave blank
+        }
       }
       sheet.addRow(row);
       counter++;
