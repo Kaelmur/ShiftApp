@@ -153,66 +153,62 @@ const exportShiftsReport = async (
         startedAt: { gte: startDate.toJSDate(), lte: endDate.toJSDate() },
         NOT: { endedAt: null },
       },
-      include: {
-        user: {
-          select: { name: true },
-        },
-      },
+      include: { user: { select: { name: true } } },
     });
 
-    // Группируем по пользователям и дням
-    const userMap: Record<string, { [day: number]: number }> = {};
-
+    // Map user → { day: hours }
+    const usersMap: Record<string, Record<number, number>> = {};
     shifts.forEach((shift) => {
       const start = DateTime.fromJSDate(shift.startedAt);
       const end = DateTime.fromJSDate(shift.endedAt!);
-
       const diff = end.diff(start, ["hours", "minutes"]);
       const totalMinutes = diff.hours * 60 + diff.minutes;
-      const excelTime = totalMinutes / (24 * 60);
+      const excelTime = totalMinutes / (24 * 60); // fraction of day
 
-      const userName = shift.user.name;
       const day = start.day;
-
-      if (!userMap[userName]) {
-        userMap[userName] = {};
+      if (!usersMap[shift.user.name]) {
+        usersMap[shift.user.name] = {};
       }
-
-      // Если несколько смен в день — суммируем
-      userMap[userName][day] = (userMap[userName][day] || 0) + excelTime;
+      usersMap[shift.user.name][day] =
+        (usersMap[shift.user.name][day] || 0) + excelTime;
     });
 
     const workbook = new excelJS.Workbook();
     const sheet = workbook.addWorksheet("Отчёт");
 
-    // Первая строка: #, ФИО, числа месяца
-    const header = [
-      "#",
-      "ФИО",
-      ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
-    ];
-    sheet.addRow(header);
+    // ---- First header row ----
+    const firstRow = ["№", "ФИО", "Числа месяца"];
+    sheet.addRow(firstRow);
 
-    // Данные по пользователям
-    let rowIndex = 1;
-    Object.entries(userMap).forEach(([userName, days]) => {
-      const row: (string | number)[] = [rowIndex, userName];
-      for (let d = 1; d <= daysInMonth; d++) {
-        row.push(days[d] || "");
-      }
-      sheet.addRow(row);
-      rowIndex++;
-    });
+    // Merge "Числа месяца" across all day columns
+    // row 1, col 3 → row 1, col N+2
+    sheet.mergeCells(1, 3, 1, daysInMonth + 2);
 
-    // Устанавливаем формат времени для всех колонок с днями
-    for (let i = 3; i <= daysInMonth + 2; i++) {
-      sheet.getColumn(i).numFmt = "HH:mm";
-      sheet.getColumn(i).width = 8;
+    // ---- Second header row ----
+    const secondRow = ["", ""]; // empty under № and ФИО
+    for (let d = 1; d <= daysInMonth; d++) {
+      secondRow.push(d.toString());
+    }
+    sheet.addRow(secondRow);
+
+    // Set column widths + formats
+    sheet.getColumn(1).width = 5; // №
+    sheet.getColumn(2).width = 25; // ФИО
+    for (let d = 3; d <= daysInMonth + 2; d++) {
+      sheet.getColumn(d).width = 10;
+      sheet.getColumn(d).numFmt = "hh:mm";
     }
 
-    // Ширина колонок # и ФИО
-    sheet.getColumn(1).width = 5;
-    sheet.getColumn(2).width = 25;
+    // ---- Add worker rows ----
+    let counter = 1;
+    Object.entries(usersMap).forEach(([name, days]) => {
+      const row: any[] = [counter, name];
+      for (let d = 1; d <= daysInMonth; d++) {
+        row.push(days[d] || 0);
+      }
+      sheet.addRow(row);
+      counter++;
+    });
 
     res.setHeader(
       "Content-Disposition",
