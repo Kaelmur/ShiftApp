@@ -70,7 +70,10 @@ function MapPage() {
           {locations.map((loc) => (
             <Marker key={loc.id} position={[loc.latitude, loc.longitude]}>
               <Popup>
-                Запись в {new Date(loc.timestamp).toLocaleTimeString("ru-RU")}
+                Запись в{" "}
+                {new Date(loc.timestamp).toLocaleTimeString("ru-RU", {
+                  timeZone: "Asia/Almaty",
+                })}
               </Popup>
             </Marker>
           ))}

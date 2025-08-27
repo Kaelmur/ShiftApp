@@ -16,7 +16,7 @@ function ManageShiftsByUsers() {
 
   // pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [shiftsPerPage] = useState(3);
+  const [shiftsPerPage] = useState(6);
 
   const handleClick = (shiftId: number) => {
     navigate(`/admin/shifts/${shiftId}/locations`);

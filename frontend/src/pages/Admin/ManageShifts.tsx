@@ -12,7 +12,7 @@ function ManageShifts() {
 
   // pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [shiftsPerPage] = useState(3);
+  const [shiftsPerPage] = useState(6);
 
   const getAllShifts = async () => {
     setLoading(true);

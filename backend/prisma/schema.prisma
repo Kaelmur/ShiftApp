@@ -45,7 +45,7 @@ model Brigade {
 model Shift {
   id        Int             @id @default(autoincrement())
   userId    Int
-  user      User            @relation("UserShifts", fields: [userId], references: [id])
+  user      User            @relation("UserShifts", fields: [userId], references: [id], onDelete: Cascade)
   companyId Int
   company   Company         @relation(fields: [companyId], references: [id])
   brigadeId Int?
@@ -60,7 +60,7 @@ model Shift {
 model ShiftLocation {
   id        Int      @id @default(autoincrement())
   shiftId   Int
-  shift     Shift    @relation(fields: [shiftId], references: [id])
+  shift     Shift    @relation(fields: [shiftId], references: [id], onDelete: Cascade)
   latitude  Float
   longitude Float
   timestamp DateTime @default(now())
