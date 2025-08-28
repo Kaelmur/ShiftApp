@@ -38,7 +38,7 @@ export const createShiftLocation = async (
   try {
     const existing = await prisma.shiftLocation.findFirst({
       where: {
-        shiftId: shiftId,
+        shiftId: Number(shiftId),
         timestamp: timestamp, // Prisma matches exact Date
       },
     });
