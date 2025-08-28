@@ -41,7 +41,7 @@ export const createShiftLocation = async (
         shiftId: parseFloat(shiftId),
         latitude: parseFloat(lat),
         longitude: parseFloat(lng),
-        timestamp: timestamp ? new Date(timestamp) : new Date(),
+        timestamp: timestamp ? new Date(Number(timestamp)) : new Date(),
       },
     });
 
