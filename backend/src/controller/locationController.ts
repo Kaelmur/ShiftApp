@@ -36,6 +36,17 @@ export const createShiftLocation = async (
     return res.status(400).json({ error: "Missing required fields" });
   }
   try {
+    const existing = await prisma.shiftLocation.findFirst({
+      where: {
+        shiftId: shiftId,
+        timestamp: timestamp, // Prisma matches exact Date
+      },
+    });
+
+    if (existing) {
+      return res.status(200).json({ success: true, location: existing });
+    }
+
     const location = await prisma.shiftLocation.create({
       data: {
         shiftId: parseFloat(shiftId),
