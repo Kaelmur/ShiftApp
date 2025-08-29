@@ -32,7 +32,6 @@ app.use("/api/reports", reportRoutes);
 // Start Server
 const config = {
   port: Number(process.env.PORT) || 5000,
-  nodeEnv: process.env.NODE_ENV || "development",
 };
 
 // Cron Job for automatically end shift at 5 pm
