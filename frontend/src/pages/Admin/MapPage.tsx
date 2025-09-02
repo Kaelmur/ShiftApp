@@ -9,10 +9,10 @@ import {
   Polyline,
 } from "react-leaflet";
 import { useParams } from "react-router-dom";
-import { LatLngExpression, L } from "leaflet";
+import { LatLngExpression } from "leaflet";
+import L from "leaflet";
 import Spinner from "@/components/Spinner";
-
-delete L.Icon.Default.prototype._getIconUrl;
+import "leaflet/dist/leaflet.css";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: "./images/marker-icon-2x.png",
