@@ -1,4 +1,4 @@
-export const BASE_URL = "http://shifts.kz";
+export const BASE_URL = "https://shifts.kz";
 
 export const API_PATHS = {
   AUTH: {

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function ManageCompanies() {
-  const [allCompanies, setAllCompanies] = useState([]);
+  const [allCompanies, setAllCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function ManageCompanies() {
     }
   };
 
-  const handleClick = (company) => {
+  const handleClick = (company: Company) => {
     navigate("/superadmin/companies/create", {
       state: { companyId: company.id },
     });

@@ -1,11 +1,5 @@
 import { DateTime } from "luxon";
 
-interface Company {
-  id: number;
-  name: string;
-  createdAt: string;
-}
-
 interface CompanyCardProps {
   company: Company;
   onClick?: () => void;
