@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthLayout from "../../components/AuthLayout";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/Inputs/Input";
@@ -14,9 +14,19 @@ function Login() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { updateUser } = useContext(UserContext);
+  const { updateUser, user } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      if (["ADMIN", "SUPER_ADMIN"].includes(user.role)) {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/user/dashboard", { replace: true });
+      }
+    }
+  }, [user, navigate]);
 
   // Handle Login Form Submit
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
