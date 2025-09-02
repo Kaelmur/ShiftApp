@@ -9,8 +9,16 @@ import {
   Polyline,
 } from "react-leaflet";
 import { useParams } from "react-router-dom";
-import { LatLngExpression } from "leaflet";
+import { LatLngExpression, L } from "leaflet";
 import Spinner from "@/components/Spinner";
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "./images/marker-icon-2x.png",
+  iconUrl: "./images/marker-icon.png",
+  shadowUrl: "./images/marker-shadow.png",
+});
 
 function MapPage() {
   const { shiftId } = useParams<{ shiftId: string }>();
