@@ -14,10 +14,14 @@ import L from "leaflet";
 import Spinner from "@/components/Spinner";
 import "leaflet/dist/leaflet.css";
 
+import markerIcon2x from "/images/marker-icon-2x.png";
+import markerIcon from "/images/marker-icon.png";
+import markerShadow from "/images/marker-shadow.png";
+
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "./images/marker-icon-2x.png",
-  iconUrl: "./images/marker-icon.png",
-  shadowUrl: "./images/marker-shadow.png",
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
 });
 
 function MapPage() {
