@@ -112,7 +112,7 @@ const Root = () => {
   if (!user) {
     return <Navigate to="/login" />;
   } else {
-    return <Navigate to="/admin/dashboard" />;
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return ["ADMIN", "SUPER_ADMIN"].includes(user?.role ?? "") ? (
