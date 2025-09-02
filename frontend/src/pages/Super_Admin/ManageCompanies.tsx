@@ -8,6 +8,8 @@ import axiosInstance from "@/utils/axiosInstance";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Companies
+
 function ManageCompanies() {
   const [allCompanies, setAllCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false);
