@@ -1,4 +1,8 @@
 function UserCard({ userInfo, onClick }: UserCardProps) {
+  const roleMap: Record<User["role"] | string, string> = {
+    ADMIN: "Админ",
+    SUPER_ADMIN: "Супер админ",
+  };
   return (
     <div className="user-card p-2" onClick={onClick}>
       <div className="flex items-center justify-between">
@@ -13,7 +17,7 @@ function UserCard({ userInfo, onClick }: UserCardProps) {
 
             <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-600 dark:text-gray-300">
               <span className="bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                Роль: {userInfo.role}
+                Роль: {roleMap[userInfo.role] ?? "Работник"}
               </span>
               {userInfo.brigade && (
                 <span className="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded">
