@@ -58,7 +58,6 @@ function MapPage() {
         <MapContainer
           center={center}
           zoom={16}
-          maxZoom={22}
           scrollWheelZoom={true}
           className="h-full w-full rounded-lg shadow"
         >
