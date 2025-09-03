@@ -17,33 +17,17 @@ import "leaflet/dist/leaflet.css";
 import markerIcon2x from "/images/marker-icon-2x.png";
 import markerIcon from "/images/marker-icon.png";
 import markerShadow from "/images/marker-shadow.png";
-import { useState } from "react";
 
-// L.Icon.Default.mergeOptions({
-//   iconRetinaUrl: markerIcon2x,
-//   iconUrl: markerIcon,
-//   shadowUrl: markerShadow,
-// });
-
-function getMarkerIcon(zoom: number) {
-  const base = 25; // marker size at zoom 16
-  const scale = Math.pow(0.87, zoom - 16); // shrink as zoom increases
-  const size = Math.max(12, Math.min(40, base * scale)); // clamp between 12–40px
-
-  return L.icon({
-    iconUrl: markerIcon,
-    iconRetinaUrl: markerIcon2x,
-    shadowUrl: markerShadow,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size], // bottom tip points to coords
-    popupAnchor: [0, -size / 2],
-  });
-}
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 function MapPage() {
   const { shiftId } = useParams<{ shiftId: string }>();
+
   const { locations, loading } = useShiftLocations(shiftId ?? "");
-  const [zoom, setZoom] = useState(16);
 
   if (!shiftId) {
     return <p>ID смены не указан</p>;
@@ -76,9 +60,6 @@ function MapPage() {
           zoom={16}
           scrollWheelZoom={true}
           className="h-full w-full rounded-lg shadow"
-          whenCreated={(map) => {
-            map.on("zoomend", () => setZoom(map.getZoom()));
-          }}
         >
           <LayersControl position="topright">
             <LayersControl.BaseLayer checked name="Светлая">
@@ -99,11 +80,7 @@ function MapPage() {
           </LayersControl>
 
           {locations.map((loc) => (
-            <Marker
-              key={loc.id}
-              position={[loc.latitude, loc.longitude]}
-              icon={getMarkerIcon(zoom)}
-            >
+            <Marker key={loc.id} position={[loc.latitude, loc.longitude]}>
               <Popup>
                 Запись в{" "}
                 {new Date(loc.timestamp).toLocaleTimeString("ru-RU", {
