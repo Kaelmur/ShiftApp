@@ -7,6 +7,7 @@ import {
   Popup,
   LayersControl,
   Polyline,
+  CircleMarker,
 } from "react-leaflet";
 import { useParams } from "react-router-dom";
 import { LatLngExpression } from "leaflet";
@@ -80,14 +81,19 @@ function MapPage() {
           </LayersControl>
 
           {locations.map((loc) => (
-            <Marker key={loc.id} position={[loc.latitude, loc.longitude]}>
+            <CircleMarker
+              key={loc.id}
+              center={[loc.latitude, loc.longitude]}
+              radius={5}
+              color="blue"
+            >
               <Popup>
                 Запись в{" "}
                 {new Date(loc.timestamp).toLocaleTimeString("ru-RU", {
                   timeZone: "Asia/Almaty",
                 })}
               </Popup>
-            </Marker>
+            </CircleMarker>
           ))}
           <Polyline positions={polylinePositions} color="blue" />
         </MapContainer>
