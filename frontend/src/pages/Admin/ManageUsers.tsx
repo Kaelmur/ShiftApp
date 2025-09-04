@@ -17,7 +17,7 @@ function ManageUsers() {
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(6);
+  const [usersPerPage] = useState(9);
 
   const getAllUsers = async () => {
     setLoading(true);
