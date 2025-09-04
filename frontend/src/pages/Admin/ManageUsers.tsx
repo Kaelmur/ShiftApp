@@ -8,12 +8,16 @@ import toast from "react-hot-toast";
 import Spinner from "@/components/Spinner";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import Pagination from "@/components/Pagination";
 
 function ManageUsers() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(6);
 
   const getAllUsers = async () => {
     setLoading(true);
@@ -59,6 +63,10 @@ function ManageUsers() {
     getAllUsers();
   }, []);
 
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = allUsers.slice(indexOfFirstUser, indexOfLastUser);
+
   return (
     <DashboardLayout activeMenu="Работники">
       <div className="mt-5 mb-10">
@@ -86,7 +94,7 @@ function ManageUsers() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            {allUsers?.map((user) => (
+            {currentUsers?.map((user) => (
               <UserCard
                 key={user.id}
                 userInfo={user}
@@ -97,6 +105,12 @@ function ManageUsers() {
             ))}
           </div>
         )}
+        <Pagination
+          itemsPerPage={usersPerPage}
+          totalItems={allUsers.length}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
       </div>
     </DashboardLayout>
   );
