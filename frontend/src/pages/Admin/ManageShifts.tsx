@@ -5,14 +5,21 @@ import { API_PATHS } from "../../utils/apiPath";
 import Spinner from "@/components/Spinner";
 import ShiftCard from "../../components/Cards/ShiftCard";
 import Pagination from "@/components/Pagination";
+import { useNavigate } from "react-router-dom";
 
 function ManageShifts() {
   const [allShifts, setAllShifts] = useState<Shift[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   // pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [shiftsPerPage] = useState(9);
+
+  const handleClick = (shiftId: number) => {
+    navigate(`/admin/shifts/${shiftId}/locations`);
+  };
 
   const getAllShifts = async () => {
     setLoading(true);
@@ -57,7 +64,11 @@ function ManageShifts() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 {currentShifts.map((shift) => (
-                  <ShiftCard key={shift.id} {...shift} />
+                  <ShiftCard
+                    key={shift.id}
+                    {...shift}
+                    onClick={() => handleClick(shift.id)}
+                  />
                 ))}
               </div>
             )}
