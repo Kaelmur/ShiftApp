@@ -59,7 +59,7 @@ function MapPage() {
           center={center}
           zoom={16}
           scrollWheelZoom={true}
-          className="h-full w-full rounded-lg shadow"
+          className="h-full w-full rounded-lg shadow z-20"
         >
           <LayersControl position="topright">
             <LayersControl.BaseLayer checked name="Светлая">
